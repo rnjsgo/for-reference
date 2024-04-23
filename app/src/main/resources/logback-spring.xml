@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <include resource="logger/property.xml"/>
+  <include resource="logger/console/console-appender.xml"/>
+  <include resource="logger/console/parameter-appender.xml"/>
+
+  <!-- Local 개발환경 로그 설정 (console만 출력) -->
+  <springProfile name="default">
+
+    <!-- Spring : INFO 레벨 이상의 로그 출력 -->
+    <logger name="org.springframework" level="INFO">
+      <appender-ref ref="console-appender"/>
+    </logger>
+
+    <!-- Application : INFO 레벨 이상의 로그 출력 -->
+    <logger name="com.thecommerce.app" level="INFO">
+      <appender-ref ref="console-appender"/>
+    </logger>
+
+    <!-- SQL Query Parameter 로그 출력 -->
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE">
+      <appender-ref ref="parameter-appender"/>
+    </logger>
+
+  </springProfile>
+</configuration>
