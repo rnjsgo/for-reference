@@ -36,6 +36,7 @@ jobs:
         run: chmod +x ./gradlew
         
       - name: Build with Gradle
+        working-directory: ./app
         run: ./gradlew clean build
         # Gradle을 사용하여 프로젝트를 빌드
 
