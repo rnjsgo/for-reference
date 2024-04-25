@@ -16,7 +16,8 @@ import org.springframework.validation.FieldError;
 @Component
 public class GlobalValidationHandler {
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping) ||"
+            + " @annotation(org.springframework.web.bind.annotation.PatchMapping)")
     public void requestMapping() {
     }
 
