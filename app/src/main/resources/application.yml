@@ -1,0 +1,32 @@
+server.port: 8080
+
+spring:
+  # MVC
+  web.resources.add-mappings: false # endpoint 에 없는 리소스의 경우, 정적 자원에 대한 매핑을 하지 않음
+  mvc:
+    throw-exception-if-no-handler-found: true # 요청에 대한 핸들러가 없을 경우 NoHandlerFoundException 예외 발생
+
+  # DB
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate.ddl-auto: create
+    properties:
+      hibernate.format_sql: true
+
+# API Docs
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /docs
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8

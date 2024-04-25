@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<included>
+  <property name="CONSOLE_PATTERN"
+    value="[%highlight(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n"/>
+  <property name="PARAMETER_PATTERN"
+    value="%yellow(#) %replace(%msg){'binding parameter \\[(\\d*)\\] as \\[\\w*\\] - ', '$1 - '} %n"/>
+</included>
