@@ -32,6 +32,7 @@ jobs:
         # JDK 8 설치 및 설정
 
       - name: Grant execute permission for gradlew
+        working-directory: ./app
         run: chmod +x ./gradlew
         
       - name: Build with Gradle
