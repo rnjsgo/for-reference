@@ -1,5 +1,6 @@
 package com.thecommerce.app.domain.user.dto.request;
 
+import com.thecommerce.app.domain.user.entity.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -31,4 +32,15 @@ public class UserSignUpDto {
     @NotBlank(message = "이메일 주소는 비어 있을 수 없습니다.")
     @Email(message = "유효한 이메일 주소여야 합니다.")
     private String email;
+
+    public User toEntity(UserSignUpDto userSignUpDto) {
+        return User.builder()
+                .userId(userSignUpDto.getUserId())
+                .password(userSignUpDto.getPassword())
+                .nickname(userSignUpDto.getNickname())
+                .name(userSignUpDto.getName())
+                .phoneNumber(userSignUpDto.getPhoneNumber())
+                .email(userSignUpDto.getEmail())
+                .build();
+    }
 }
