@@ -17,9 +17,9 @@ public class PaginationInfo {
     private boolean hasPrevious; // 이전 페이지 존재 여부
     private boolean hasNext; // 다음 페이지 존재 여부
 
-    public static PaginationInfo fromPage(final Page<?> page) {
+    public static PaginationInfo of(final Page<?> page) {
         return PaginationInfo.builder()
-                .currentPage(page.getNumber() + 1)  // Page는 0부터 시작하므로 1을 더함
+                .currentPage(page.getNumber())
                 .totalPages(page.getTotalPages())
                 .totalElements(page.getTotalElements())
                 .pageSize(page.getSize())

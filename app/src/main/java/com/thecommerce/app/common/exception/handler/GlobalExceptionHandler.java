@@ -19,7 +19,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             ValidationException.class,
             AlreadyExistUserIdException.class,
-            AlreadyExistNicknameException.class
+            AlreadyExistNicknameException.class,
+            IllegalArgumentException.class
     })
     public ResponseEntity<Response> badRequest(final RuntimeException e) {
         log.warn("bad request error.", e);
