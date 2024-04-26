@@ -18,7 +18,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Builder
 @AllArgsConstructor
-@Table(name = "user")
+@Table(name = "user_tbl")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
