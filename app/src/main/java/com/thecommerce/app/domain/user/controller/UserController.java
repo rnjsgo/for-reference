@@ -5,10 +5,12 @@ import com.thecommerce.app.domain.user.dto.request.UserSignUpDto;
 import com.thecommerce.app.domain.user.dto.request.UserUpdateRequestDto;
 import com.thecommerce.app.domain.user.dto.response.UserListDto;
 import com.thecommerce.app.domain.user.dto.response.UserUpdateResponseDto;
+import com.thecommerce.app.domain.user.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user")
 public class UserController implements UserApiInterface {
 
+    private final UserService userService;
+
     @PostMapping("/join")
     public ResponseEntity<Response> signUp(@Valid @RequestBody final UserSignUpDto userSignUpDto,
             Errors errors) {
-        return null;
+
+        userService.signUp(userSignUpDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Response.success());
     }
 
     @GetMapping("/list")
