@@ -16,12 +16,15 @@ import org.springframework.validation.FieldError;
 @Component
 public class GlobalValidationHandler {
 
-    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping) ||"
-            + " @annotation(org.springframework.web.bind.annotation.PatchMapping)")
-    public void requestMapping() {
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    public void postMapping() {
     }
 
-    @Before("requestMapping()")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PatchMapping)")
+    public void patchMapping() {
+    }
+
+    @Before("postMapping() || patchMapping()")
     public void validationAdvice(final JoinPoint jp) {
         List<Object> args = Arrays.stream(jp.getArgs()).collect(Collectors.toList());
         List<Errors> errors = extractErrors(args);

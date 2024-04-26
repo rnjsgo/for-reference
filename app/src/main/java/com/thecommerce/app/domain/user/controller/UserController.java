@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements UserApiInterface {
 
     @PostMapping("/join")
-    public ResponseEntity<Response> signUp(@Valid @RequestBody final UserSignUpDto userSignUpDto) {
+    public ResponseEntity<Response> signUp(@Valid @RequestBody final UserSignUpDto userSignUpDto,
+            Errors errors) {
         return null;
     }
 
@@ -36,7 +38,8 @@ public class UserController implements UserApiInterface {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Response<UserUpdateResponseDto>> updateUser(@PathVariable final int id,
-            @Valid @RequestBody final UserUpdateRequestDto userUpdateRequestDto) {
+            @Valid @RequestBody final UserUpdateRequestDto userUpdateRequestDto,
+            Errors errors) {
         return null;
     }
 }
