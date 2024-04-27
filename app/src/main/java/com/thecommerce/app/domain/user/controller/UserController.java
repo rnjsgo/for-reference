@@ -39,7 +39,8 @@ public class UserController implements UserApiInterface {
     @GetMapping("/list")
     public ResponseEntity<Response<UserListDto>> getUsers(
             @PageableDefault(size = 10, sort = "name") final Pageable pageable) {
-        return null;
+
+        return ResponseEntity.ok(Response.success(userService.getUsers(pageable)));
     }
 
     @PatchMapping("/{id}")

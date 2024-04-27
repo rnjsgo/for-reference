@@ -1,16 +1,22 @@
 package com.thecommerce.app.domain.user;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.thecommerce.app.domain.user.dto.request.UserSignUpDto;
+import com.thecommerce.app.domain.user.dto.response.UserListDto;
 import com.thecommerce.app.domain.user.entity.User;
 import com.thecommerce.app.domain.user.exception.AlreadyExistNicknameException;
 import com.thecommerce.app.domain.user.exception.AlreadyExistUserIdException;
 import com.thecommerce.app.domain.user.repository.UserRepository;
 import com.thecommerce.app.domain.user.service.UserService;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +24,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -69,7 +78,7 @@ public class UserServiceTest {
             when(userRepository.findByUserId(userSignUpDto.getUserId())).thenReturn(
                     Optional.of(User.builder().build()));
 
-            // when
+            // then
             assertThatThrownBy(() -> userService.signUp(userSignUpDto))
                     .isInstanceOf(AlreadyExistUserIdException.class);
         }
@@ -92,9 +101,45 @@ public class UserServiceTest {
             when(userRepository.findByNickname(userSignUpDto.getNickname())).thenReturn(
                     Optional.of(User.builder().build()));
 
-            // when
+            // then
             assertThatThrownBy(() -> userService.signUp(userSignUpDto))
                     .isInstanceOf(AlreadyExistNicknameException.class);
+        }
+    }
+
+    @Nested
+    class 회원목록조회 {
+
+        @Test
+        public void 회원목록조회_성공() {
+
+            // given
+            User user1 = User.builder().userId("user01").build();
+            User user2 = User.builder().userId("user02").build();
+
+            List<User> userList = Arrays.asList(user1, user2);
+            Page<User> page = new PageImpl<>(userList);
+            Pageable pageable = Pageable.unpaged();
+
+            // stub
+            when(userRepository.findAll(pageable)).thenReturn(page);
+
+            // when
+            UserListDto result = userService.getUsers(pageable);
+
+            // then
+            assertNotNull(result);
+            assertEquals(2, result.getUsers().size());
+            assertEquals("user01", result.getUsers().get(0).getUserId());
+            verify(userRepository).findAll(pageable);
+        }
+
+        @Test
+        void 회원목록조회_실패_잘못된페이지형식() {
+            Exception exception = assertThrows(IllegalArgumentException.class,
+                    () -> userService.getUsers(Pageable.ofSize(-1)));
+
+            System.out.println("IllegalArgumentException message : " + exception.getMessage());
         }
     }
 }
