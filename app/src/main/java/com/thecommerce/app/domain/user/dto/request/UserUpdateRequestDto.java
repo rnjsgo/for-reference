@@ -3,11 +3,13 @@ package com.thecommerce.app.domain.user.dto.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class UserUpdateRequestDto {
 
     @NotBlank(message = "닉네임은 비어 있을 수 없습니다")

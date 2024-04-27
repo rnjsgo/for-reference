@@ -5,19 +5,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.thecommerce.app.domain.user.dto.request.UserSignUpDto;
+import com.thecommerce.app.domain.user.dto.request.UserUpdateRequestDto;
 import com.thecommerce.app.domain.user.dto.response.UserListDto;
+import com.thecommerce.app.domain.user.dto.response.UserUpdateResponseDto;
 import com.thecommerce.app.domain.user.entity.User;
 import com.thecommerce.app.domain.user.exception.AlreadyExistNicknameException;
 import com.thecommerce.app.domain.user.exception.AlreadyExistUserIdException;
+import com.thecommerce.app.domain.user.exception.UserNotFoundException;
 import com.thecommerce.app.domain.user.repository.UserRepository;
 import com.thecommerce.app.domain.user.service.UserService;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -140,6 +145,79 @@ public class UserServiceTest {
                     () -> userService.getUsers(Pageable.ofSize(-1)));
 
             System.out.println("IllegalArgumentException message : " + exception.getMessage());
+        }
+    }
+
+    @Nested
+    class 회원정보수정 {
+
+        private Long id;
+        private User user;
+        private UserUpdateRequestDto userUpdateRequestDto;
+
+        @BeforeEach
+        public void setUp() {
+            id = 1L;
+
+            user = User.builder()
+                    .userId("user01")
+                    .nickname("nickname")
+                    .name("User")
+                    .phoneNumber("01012345678")
+                    .email("email@example.com")
+                    .build();
+
+            userUpdateRequestDto = UserUpdateRequestDto.builder()
+                    .nickname("newNickname")
+                    .name("New User")
+                    .phoneNumber("01087654321")
+                    .email("newEmail@example.com")
+                    .build();
+        }
+
+        @Test
+        public void 회원정보수정_성공() {
+
+            // stub
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+            when(userRepository.findByNicknameAndIdNot(userUpdateRequestDto.getNickname(), id))
+                    .thenReturn(Optional.empty());
+
+            // when
+            UserUpdateResponseDto result = userService.updateUser(id, userUpdateRequestDto);
+
+            // then
+            assertNotNull(result);
+            assertEquals(userUpdateRequestDto.getNickname(), result.getNickname());
+            assertEquals(userUpdateRequestDto.getName(), result.getName());
+            verify(userRepository).findById(id);
+            verify(userRepository).findByNicknameAndIdNot(userUpdateRequestDto.getNickname(), id);
+        }
+
+        @Test
+        public void 회원정보수정_실패_존재하지않는회원() {
+
+            // stub
+            when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+            // then
+            assertThrows(UserNotFoundException.class, () -> {
+                userService.updateUser(id, userUpdateRequestDto);
+            });
+        }
+
+        @Test
+        public void 회원정보수정_실패_닉네임중복() {
+
+            // stub
+            when(userRepository.findById(id)).thenReturn(Optional.of(user));
+            when(userRepository.findByNicknameAndIdNot(userUpdateRequestDto.getNickname(), id))
+                    .thenReturn(Optional.of(User.builder().build()));
+
+            // then
+            assertThrows(AlreadyExistNicknameException.class, () -> {
+                userService.updateUser(id, userUpdateRequestDto);
+            });
         }
     }
 }

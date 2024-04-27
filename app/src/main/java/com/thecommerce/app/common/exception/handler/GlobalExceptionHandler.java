@@ -4,6 +4,7 @@ import com.thecommerce.app.common.exception.ValidationException;
 import com.thecommerce.app.common.util.Response;
 import com.thecommerce.app.domain.user.exception.AlreadyExistNicknameException;
 import com.thecommerce.app.domain.user.exception.AlreadyExistUserIdException;
+import com.thecommerce.app.domain.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,8 @@ public class GlobalExceptionHandler {
             ValidationException.class,
             AlreadyExistUserIdException.class,
             AlreadyExistNicknameException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            UserNotFoundException.class
     })
     public ResponseEntity<Response> badRequest(final RuntimeException e) {
         log.warn("bad request error.", e);
