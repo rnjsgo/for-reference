@@ -1,13 +1,15 @@
 package com.thecommerce.app.domain.user;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thecommerce.app.domain.user.dto.request.UserSignUpDto;
+import com.thecommerce.app.domain.user.dto.request.UserUpdateRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -60,6 +62,32 @@ public class UserIntegrationTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.response.users").isArray())
                 .andExpect(jsonPath("$.response.users[0].name").isNotEmpty())
+                .andDo(print());
+    }
+
+    // ("/api/user/{id}")
+    @Test
+    @Sql("classpath:sql/UserDummyData.sql")
+    public void 회원정보수정() throws Exception {
+
+        Long id = 1L;
+        UserUpdateRequestDto userUpdateRequestDto = UserUpdateRequestDto.builder()
+                .nickname("newNickname")
+                .name("New User")
+                .phoneNumber("01087654321")
+                .email("newEmail@example.com")
+                .build();
+
+        mockMvc.perform(patch("/api/user/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(userUpdateRequestDto)))
+                .andExpect(status().isOk())
+                .andExpect(
+                        jsonPath("$.response.nickname").value(userUpdateRequestDto.getNickname()))
+                .andExpect(jsonPath("$.response.name").value(userUpdateRequestDto.getName()))
+                .andExpect(jsonPath("$.response.phoneNumber").value(
+                        userUpdateRequestDto.getPhoneNumber()))
+                .andExpect(jsonPath("$.response.email").value(userUpdateRequestDto.getEmail()))
                 .andDo(print());
     }
 }

@@ -76,7 +76,7 @@ public interface UserApiInterface {
                             "\t\n 3. 이메일 형식이 틀린 경우", content = @Content)
     })
     ResponseEntity<Response<UserUpdateResponseDto>> updateUser(
-            @PathVariable("id") int id,
+            @PathVariable("id") Long id,
             @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto,
             Errors errors);
 }

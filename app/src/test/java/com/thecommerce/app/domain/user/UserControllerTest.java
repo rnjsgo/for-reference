@@ -1,16 +1,20 @@
 package com.thecommerce.app.domain.user;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thecommerce.app.domain.user.controller.UserController;
 import com.thecommerce.app.domain.user.dto.request.UserSignUpDto;
+import com.thecommerce.app.domain.user.dto.request.UserUpdateRequestDto;
 import com.thecommerce.app.domain.user.dto.response.UserListDto;
+import com.thecommerce.app.domain.user.dto.response.UserUpdateResponseDto;
 import com.thecommerce.app.domain.user.entity.User;
 import com.thecommerce.app.domain.user.service.UserService;
 import java.util.Arrays;
@@ -93,5 +97,34 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.response.users").isArray())
                 .andExpect(jsonPath("$.response.users.length()").value(2))
                 .andExpect(jsonPath("$.response.users[0].name").value("User One"));
+    }
+
+    // ("/api/user/{id}")
+    @Test
+    public void 회원정보수정() throws Exception {
+        // given
+        Long id = 1L;
+
+        UserUpdateResponseDto userUpdateResponseDto = UserUpdateResponseDto.builder()
+                .nickname("newNickname")
+                .name("New User")
+                .phoneNumber("01087654321")
+                .email("email@example.com")
+                .build();
+
+        // stub
+        when(userService.updateUser(eq(id), any(UserUpdateRequestDto.class))).thenReturn(
+                userUpdateResponseDto);
+
+        // then
+        mockMvc.perform(patch("/api/user/{id}", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(
+                                UserUpdateRequestDto.builder().build())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(
+                        jsonPath("$.response.nickname").value(userUpdateResponseDto.getNickname()))
+                .andExpect(jsonPath("$.response.name").value(userUpdateResponseDto.getName()));
     }
 }

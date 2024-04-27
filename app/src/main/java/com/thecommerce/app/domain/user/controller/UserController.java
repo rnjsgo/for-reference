@@ -44,9 +44,11 @@ public class UserController implements UserApiInterface {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Response<UserUpdateResponseDto>> updateUser(@PathVariable final int id,
+    public ResponseEntity<Response<UserUpdateResponseDto>> updateUser(@PathVariable final Long id,
             @Valid @RequestBody final UserUpdateRequestDto userUpdateRequestDto,
             Errors errors) {
-        return null;
+
+        return ResponseEntity.ok(
+                Response.success(userService.updateUser(id, userUpdateRequestDto)));
     }
 }
