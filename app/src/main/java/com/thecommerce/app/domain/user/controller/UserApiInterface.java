@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -32,7 +33,8 @@ public interface UserApiInterface {
                             "\t\n 3. 전화번호 형식이 다른 경우 (전화번호는 10자리 또는 11자리 숫자)" +
                             "\t\n 4. 이메일 형식이 틀린 경우", content = @Content)
     })
-    ResponseEntity<Response> signUp(@Valid @RequestBody UserSignUpDto userSignUpDto);
+    ResponseEntity<Response> signUp(@Valid @RequestBody UserSignUpDto userSignUpDto,
+            Errors error);
 
     @Operation(summary = "회원목록 조회 API",
             description = "입력된 회원들의 정보를 목록으로 조회합니다.",
@@ -74,6 +76,7 @@ public interface UserApiInterface {
                             "\t\n 3. 이메일 형식이 틀린 경우", content = @Content)
     })
     ResponseEntity<Response<UserUpdateResponseDto>> updateUser(
-            @PathVariable("id") int id,
-            @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto);
+            @PathVariable("id") Long id,
+            @Valid @RequestBody UserUpdateRequestDto userUpdateRequestDto,
+            Errors errors);
 }

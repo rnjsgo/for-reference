@@ -62,7 +62,8 @@ jacocoTestReport {
             fileTree(dir: it,
                     exclude: ["com/thecommerce/app/AppApplication.class",
                               "**/dto/**",
-                              "**/config/**"
+                              "**/config/**",
+                              "**/logger/**"
                     ])
         }))
     }
