@@ -73,4 +73,30 @@ public class UserRepositoryTest {
         assertThat(usersByCreatedAt).isSortedAccordingTo(Comparator.comparing(User::getCreatedAt));
     }
 
+    @Test
+    public void 닉네임으로_회원조회_본인닉네임제외() {
+        // given - UserDummyData.sql 스크립트를 통해 더미 데이터 삽입
+        final String nickname = "nick01";
+        final Long id = 1L;
+
+        // when
+        Optional<User> foundUser = userRepository.findByNicknameAndIdNot(nickname, id);
+
+        // then
+        assertThat(foundUser.isPresent()).isFalse();
+    }
+
+    @Test
+    public void 닉네임으로_회원조회_중복닉네임_존재(){
+        // given - UserDummyData.sql 스크립트를 통해 더미 데이터 삽입
+        final String nickname = "nick01";
+        final Long id = 2L;
+
+        // when
+        Optional<User> foundUser = userRepository.findByNicknameAndIdNot(nickname, id);
+
+        // then
+        assertThat(foundUser.isPresent()).isTrue();
+        assertThat(foundUser.get().getNickname()).isEqualTo(nickname);
+    }
 }
