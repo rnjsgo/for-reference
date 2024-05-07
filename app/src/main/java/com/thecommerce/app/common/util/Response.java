@@ -1,10 +1,12 @@
 package com.thecommerce.app.common.util;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
+@Schema
 public class Response<T> {
 
     private final boolean success;

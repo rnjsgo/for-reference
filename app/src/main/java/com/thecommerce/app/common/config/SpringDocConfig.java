@@ -13,8 +13,8 @@ public class SpringDocConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("더 커머스 백엔드 기술 과제 API 문서")
-                        .description("더 커머스 백엔드 개발자 기술 과제 API 문서 입니다.")
+                        .title("Swagger API 문서")
+                        .description("Swagger API 문서 입니다.")
                         .version("v1.0.0"));
     }
 }
